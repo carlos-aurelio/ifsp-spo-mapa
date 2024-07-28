@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="user-scalable=yes, width=device-width">
+		<meta charset="UTF-8">
+		<meta name="color-scheme" content="light only">
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<div id="divtitle">
+		Localizador de salas<br />
+		IFSP - Campus São Paulo<br /><br />
+		</div>
+		<div id="selectdiv" style="display: none">
+			<div id="divsearchback">
+				<fieldset>
+					Sala:
+					<select id="selbloco"></select>
+					<select id="selsala2"></select>
+				&nbsp; &nbsp;
+				<a href="#" onclick="javascript:search_sala()">Digitar</a>
+				</fieldset>
+			</div>
+		</div>
+		<div id="loadingdiv"><br />Carregando...<br /></div>
+		<div id="errordiv" style="display: none">Dados indisponíveis</div>
+		<div id="nomapdiv" style="display: none">
+			<br />
+			Mapa indisponível
+			<br />
+		</div>
+		<div id="contentdiv" style="opacity: 0%">
+			<div class="titulo">
+				<br />
+				<span id="nome-area">&nbsp;</span>
+			</div>
+			<div id="zoomdiv">
+				<svg id="zoom-bloco" width="150mm" height="150mm" viewBox="0 0 150mm 150mm"
+					xmlns="http://www.w3.org/2000/svg"
+					xmlns:svg="http://www.w3.org/2000/svg">
+				</svg>
+			</div>
+			<div id="mapdiv"></div>
+		</div>
+		<div class="footer">
+			<br />
+			<a
+				href="https://github.com/carlos-aurelio/ifsp-spo-mapa/issues"
+				target="_blank"
+				title="Informe um problema"
+				alt="Informe um problema">&#129714; <b>Informe um problema</b></a>
+			<br /><br />
+			Copyright &copy; 2024 <b>Carlos Aurelio</b>
+			<br />
+			Engenharia Elétrica - IFSP - Câmpus São Paulo
+			<br />
+			<span id="spanversion"></span>
+		</div>
+		<script src="table.js"></script>
+		<script src="script.js"></script>
+		<script>
+
+			window.onerror = function(msg, url, linenumber) {
+				alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
+				return true;
+			}
+
+			init_system();
+		</script>
+	</body>
+</html>
