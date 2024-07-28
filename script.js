@@ -1,7 +1,8 @@
 
 var map;
 var cbloco;
-var table;
+
+var salas_aliases = [];
 
 var working_offline = false;
 
@@ -219,10 +220,10 @@ function show_sala(sala_n) {
 		
 		var bnome = zbloco.getAttribute("inkscape:label").replace("-", " ").toUpperCase();
 		var anome = andar.getAttribute("inkscape:label").split(",")[1].toUpperCase();
-		var sala_fname = sala_n;
-		var sala_oname = get_sala_old_name(sala_n);
+		var sala_fname = sala_n.split(";")[0];
+		var sala_oname = get_sala_old_name(sala_n.split(";")[0]);
 		if (sala_oname !== null)
-			sala_fname = sala_n + "/" + sala_oname;
+			sala_fname += "/" + sala_oname;
 		el("nome-area").innerHTML = bnome + " - " + anome + " - " + sala_fname.toUpperCase();
 	} else {
 		el("nomapdiv").style.removeProperty("display");
@@ -262,14 +263,9 @@ function load_map() {
 			map.setAttribute("height", "50mm");
 			map.setAttribute("viewBox", "40 90 120 150");
 			map.setAttribute("class", "map3d");
-			console.log("requesting table...");
-			fetch("tabela.json").then(response => response.json()).then(data => {
-				table = data;
-				console.log("table loaded");
-				init_map();
-				init_direct_search();
-				el("selectdiv").style.removeProperty("display");
-			});
+			init_map();
+			init_direct_search();
+			el("selectdiv").style.removeProperty("display");
 		});
 }
 
@@ -321,7 +317,12 @@ function init_map() {
 			for (var k = 0; k < salas.length; k++) {
 				salas[k].style.setProperty("stroke", "#000000");
 				salas[k].style.setProperty("fill", "#fefecc");
-				var new_name = salas[k].getAttribute("inkscape:label");
+				var label = salas[k].getAttribute("inkscape:label");
+				add_sala_alias(label);
+				var new_name = null;
+				if (label !== null)
+					new_name = label.split(";")[0];
+
 				var old_name = get_sala_old_name(new_name);
 				var full_name = new_name;
 				if (old_name !== null)
@@ -356,11 +357,20 @@ function init_map() {
 	}
 }
 
+function add_sala_alias(label) {
+	if (label === null)
+		return;
+
+	var names = label.split(";");
+	if (names.length > 1)
+		salas_aliases.push([ names[0], names[1].toUpperCase()]);
+}
+
 function get_sala_old_name(new_name) {
 	if (new_name === null)
 		return null;
 
-	var aliases = table["alias-salas"];
+	var aliases = salas_aliases;
 	for (var i = 0; i < aliases.length; i++) {
 		if (aliases[i][0].toUpperCase() === new_name.toUpperCase())
 			return aliases[i][1];
@@ -372,7 +382,7 @@ function get_sala_new_name(old_name) {
 	if (old_name === null)
 		return null;
 
-	var aliases = table["alias-salas"];
+	var aliases = salas_aliases;
 	for (var i = 0; i < aliases.length; i++) {
 		if (aliases[i][1].toUpperCase() === old_name.toUpperCase())
 			return aliases[i][0];
@@ -386,9 +396,13 @@ function search_sala() {
 	if (in_name === null)
 		return;
 
-	var sname = get_sala_new_name(in_name);
-	if (sname === null)
-		sname = in_name;
+	var nname = get_sala_new_name(in_name);
+	var oname = get_sala_old_name(in_name);
+	var sname = in_name;
+	if (nname !== null)
+		sname = nname + ";" + in_name;
+	else if (oname !== null)
+		sname = in_name + ";" + oname;
 
 	var sala = get_sala(sname.toLowerCase());
 	if (sala === null) {
@@ -453,8 +467,8 @@ function fill_list_salas() {
 	var salas = list_salas(el("selbloco").value);
 	if (salas !== undefined) {
 		for (var i = 0; i < salas.length; i++) {
-			var oname = get_sala_old_name(salas[i]);
-			var fname = salas[i].toUpperCase();
+			var oname = get_sala_old_name(salas[i].split(";")[0]);
+			var fname = salas[i].split(";")[0].toUpperCase();
 			if (oname !== null)
 				fname += " / " + oname;
 			el("selsala2").innerHTML += "<option value='" + salas[i] + "'>"

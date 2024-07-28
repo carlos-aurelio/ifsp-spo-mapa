@@ -9,9 +9,7 @@ var URLS = [                            // Add URL you want to cache in this lis
 	URL_PATH,
 	URL_PATH + 'mapa.html',
 	URL_PATH + 'script.js',
-	URL_PATH + 'table.js',
 	URL_PATH + 'style.css',
-	URL_PATH + 'tabela.json',
 	URL_PATH + 'ifsp.svg'
 ]
 
