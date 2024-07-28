@@ -2,8 +2,8 @@
 
 var URL_PATH = self.location.pathname.replace(/[^/]*$/, '')
 
-var APP_PREFIX = 'MapaDeSalas_'         // Identifier for this app (this needs to be consistent across every cache update)
-var VERSION = 'version_00'              // Version of the off-line cache (change this value everytime you want to update cache)
+var APP_PREFIX = 'MapaIFSP_SPO_'  // Identifier for this app (this needs to be consistent across every cache update)
+var VERSION = 'v_00'              // Version of the off-line cache (change this value everytime you want to update cache)
 var CACHE_NAME = APP_PREFIX + VERSION
 var URLS = [                            // Add URL you want to cache in this list.
 	URL_PATH,
