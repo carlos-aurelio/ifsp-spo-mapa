@@ -2,3 +2,6 @@
 
 [Acesse](https://carlos-aurelio.github.io/ifsp-spo-mapa/mapa.html).
 
+---
+
+Todos os direitos reservados.
