@@ -6,6 +6,8 @@ var salas_aliases = [];
 
 var working_offline = false;
 
+var last_hash = "a298";
+
 function fetch_force(url) {
 	var suffix = '';
 	if (!working_offline)
@@ -265,10 +267,28 @@ function load_map() {
 			map.setAttribute("height", "50mm");
 			map.setAttribute("viewBox", "40 90 120 150");
 			map.setAttribute("class", "map3d");
+			var hash = window.location.hash;
 			init_map();
 			init_direct_search();
 			el("selectdiv").style.removeProperty("display");
+			window.location.hash = hash;
+			addEventListener("hashchange", (event) => {
+				hash_changed();
+			});
+			hash_changed();
 		});
+}
+
+function hash_changed() {
+	console.log("hash changed: " + window.location.hash);
+	if (get_sala(window.location.hash.substr(1)) !== null) {
+		show_sala(window.location.hash.substr(1));
+		last_hash = window.location.hash.substr(1);
+		return true;
+	} else {
+		window.location.hash = last_hash;
+		return false;
+	}
 }
 
 function init_system() {
@@ -412,8 +432,7 @@ function search_sala() {
 		return
 	}
 
-	show_sala(sname.toLowerCase());
-	el("divsearchback").style.removeProperty("display");
+	window.location.hash = sname.toLowerCase();
 }
 
 function list_blocos() {
@@ -497,7 +516,7 @@ function list_selected_sala(sala_n) {
 }
 
 function show_sala_direct(sala_name) {
-	show_sala(sala_name);
+	window.location.hash = sala_name;
 }
 
 function evt_selbloco_change() {
