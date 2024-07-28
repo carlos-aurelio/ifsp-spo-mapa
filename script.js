@@ -135,6 +135,7 @@ function get_limites(bloco) {
 
 function set_escada_fill(escada) {
 	var label = escada.getAttribute("inkscape:label");
+	/*
 	var dir = label.split("-")[1];
 	var to;
 	switch (dir) {
@@ -148,9 +149,10 @@ function set_escada_fill(escada) {
 			to = "top";
 			break;
 	}
+	*/
 	escada.style.setProperty("fill", "#cccccc");
 	//escada.style.removeProperty("stroke");
-	escada.style.setProperty("stroke-width", "0");
+	escada.style.setProperty("stroke-width", "0.05px");
 }
 
 function get_sala(s, parent) {
