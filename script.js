@@ -152,9 +152,16 @@ function set_escada_fill(escada) {
 			break;
 	}
 	*/
-	escada.style.setProperty("fill", "#cccccc");
-	//escada.style.removeProperty("stroke");
-	escada.style.setProperty("stroke-width", "0.05px");
+	if (label == null) {
+		escada.style.removeProperty("fill");
+		escada.style.setProperty("stroke-width", "0.05px");
+	} else if (label.startsWith("escada-")) {
+		escada.style.setProperty("fill", "#cccccc");
+		escada.style.setProperty("stroke-width", "0.05px");
+	} else if (label.startsWith("seta-")) {
+		escada.style.setProperty("stroke-width", "0.1px");
+		escada.style.setProperty("fill", "none");
+	}
 }
 
 function get_sala(s, parent) {
