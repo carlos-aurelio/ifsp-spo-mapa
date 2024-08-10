@@ -117,6 +117,10 @@ fieldset {
 	fill: red !important;
 }
 
+.bloco-destacado g rect.sala-destacado {
+	fill: red !important;
+}
+
 .bloco-destacado rect,
 .bloco-destacado path {
 	fill: lime !important;
