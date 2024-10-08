@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+<style>
+
+body {
+	font-family: "Courier-New", monospace;
+}
+
+table {
+	margin: auto;
+	border-collapse: collapse;
+}
+
+th {
+	border: solid 1px black;
+	padding: 5pt;
+	background-color: lightgray;
+}
+
+td {
+	padding: 5pt;
+	border: solid 1px black;
+}
+
+td.num-aula {
+	font-weight: bold;
+	background-color: lightgray;
+}
+
+input.idisc, input.iroom {
+	width: 50pt;
+}
+
+input#btn-edit {
+	width: 50pt;
+}
+
+input#btn-mklink {
+	width: 50pt;
+}
+
+div {
+	text-align: center;
+}
+
+div#grid td {
+	width: 100pt;
+	height: 20pt;
+	text-align: center;
+}
+
+div.footer {
+	font-size: 10pt;
+	padding-top: 20pt;
+	padding-bottom: 20pt;
+}
+
+</style>
+	</head>
+	<body>
+		<div id="edit" style="display: none">
+		<div id="tbl"></div>
+		<br />
+		<input type="button" value="OK" id="btn-mklink" />
+		<span id="span-link"></span>
+		</div>
+		<div id="grid"></div>
+		<div class="footer">
+			<br /><br />
+			<a
+				href="https://github.com/carlos-aurelio/ifsp-spo-mapa/issues"
+				target="_blank"
+				title="Informe um problema"
+				alt="Informe um problema">&#129714; <b>Informe um problema</b></a>
+			<br /><br />
+			Copyright &copy; 2024 <b>Carlos Aurelio</b>
+			<br />
+			Engenharia Elétrica - IFSP - Campus São Paulo
+			<br />
+			<span id="spanversion"></span>
+		</div>
+<script src="lzutf8.js"></script>
+<script>
+	function el(id) {
+		return document.getElementById(id);
+	}
+
+	function create_tbl() {
+		let weeknames = [ "Seg.", "Ter.", "Qua.", "Qui.", "Sex." ];
+		let tbl = document.createElement("table");
+		let tr = document.createElement("tr");
+		let th = document.createElement("th");
+		tr.appendChild(th);
+		for (let i = 0; i < 5; i++) {
+			let th = document.createElement("th");
+			th.innerHTML = weeknames[i];
+			tr.appendChild(th);
+		}
+		tbl.appendChild(tr);
+		for (let i = 0; i < 5; i++) {
+			let tr = document.createElement("tr");
+			let td = document.createElement("td");
+			td.setAttribute("class", "num-aula");
+			td.innerHTML = (i + 1) + "ª Aula";
+			tr.appendChild(td);
+			for (let j = 0; j < 5; j++) {
+				let td = document.createElement("td");
+				let spdisc = document.createElement("span");
+				spdisc.innerHTML = "Disc.:"
+				let sproom = document.createElement("span");
+				sproom.innerHTML = "Sala :"
+				let br = document.createElement("br");
+				let idisc = document.createElement("input");
+				idisc.setAttribute("id", "idisc-" + i + ":" + j);
+				idisc.setAttribute("class", "idisc");
+				idisc.setAttribute("type", "text");
+				let iroom = document.createElement("input");
+				iroom.setAttribute("id", "iroom-" + i + ":" + j);
+				iroom.setAttribute("class", "iroom");
+				iroom.setAttribute("type", "text");
+				td.appendChild(spdisc);
+				td.appendChild(idisc);
+				td.appendChild(br);
+				td.appendChild(sproom);
+				td.appendChild(iroom);
+				tr.appendChild(td);
+			}
+			tbl.appendChild(tr);
+		}
+		el("tbl").innerHTML = "Turma: <input id=\"ititle\" type=\"text\" /><br /><br />";
+		el("tbl").appendChild(tbl);
+	}
+
+	function create_grid() {
+		let weeknames = [ "Seg.", "Ter.", "Qua.", "Qui.", "Sex." ];
+		let tbl = document.createElement("table");
+		let tr = document.createElement("tr");
+		let th = document.createElement("th");
+		th.innerHTML = "<input type=\"button\" value=\"&#128393;\" id=\"btn-edit\">";
+		tr.appendChild(th);
+		for (let i = 0; i < 5; i++) {
+			let th = document.createElement("th");
+			th.innerHTML = weeknames[i];
+			tr.appendChild(th);
+		}
+		tbl.appendChild(tr);
+		for (let i = 0; i < 5; i++) {
+			let tr = document.createElement("tr");
+			let td = document.createElement("td");
+			td.innerHTML = (i + 1) + "ª Aula";
+			td.setAttribute("class", "num-aula");
+			tr.appendChild(td);
+			for (let j = 0; j < 5; j++) {
+				let td = document.createElement("td");
+				let spdisc = document.createElement("span");
+				spdisc.setAttribute("id", "spdisc-" + i + ":" + j);
+				let sproom = document.createElement("span");
+				sproom.setAttribute("id", "sproom-" + i + ":" + j);
+				let br = document.createElement("br");
+				td.appendChild(spdisc);
+				td.appendChild(br);
+				td.appendChild(sproom);
+				tr.appendChild(td);
+			}
+			tbl.appendChild(tr);
+		}
+		el("grid").innerHTML = "<b>Horário das aulas: <span id=\"sptitle\"></span></b><br /><br />";
+		el("grid").appendChild(tbl);
+	}
+
+	function mklink() {
+		let roomstr = el("ititle").value;
+		let roomb64 = "";
+		for (let i = 0; i < 5; i++) {
+			for (let j = 0; j < 5; j++) {
+				roomstr += "," + el("idisc-" + i + ":" + j).value + "=";
+				roomstr += el("iroom-" + i + ":" + j).value;
+			}
+		}
+		if (roomstr.split(",").length != 26) {
+			alert("Não utilize vírgulas nos campos!");
+			return false;
+		}
+		let roomc = LZUTF8.compress(roomstr, { 'outputEncoding': 'Base64' });
+		console.log(roomstr);
+		console.log(roomc);
+		window.location.hash = roomc;
+		return true;
+	}
+
+	function loadlink() {
+		let roomc = window.location.hash.substr(1);
+		let roomstr = LZUTF8.decompress(roomc, { 'inputEncoding': 'Base64' });
+		console.log(roomc);
+		console.log(roomstr);
+		let arr = roomstr.split(",");
+		if (arr.length != 26) {
+			console.log("invalid link");
+			return false;
+		}
+		el("ititle").value = arr[0];
+		el("sptitle").innerHTML = arr[0];
+		for (let i = 0; i < 5; i++) {
+			for (let j = 0; j < 5; j++) {
+				let di = arr[1 + i * 5 + j];
+				let diarr = di.split("=");
+				el("idisc-" + i + ":" + j).value = diarr[0];
+				el("iroom-" + i + ":" + j).value = diarr[1];
+				el("spdisc-" + i + ":" + j).innerHTML = diarr[0];
+				let rarr = diarr[1].split("/");
+				el("sproom-" + i + ":" + j).innerHTML = "";
+				for (let k = 0; k < rarr.length; k++) {
+						let lnk = "<a target=\"_blank\" href=\"" + window.location.protocol + "//" + window.location.host + "/#" + rarr[k] + "\">" + rarr[k].split(";")[0].toUpperCase() + "</a>";
+
+						el("sproom-" + i + ":" + j).innerHTML += lnk;
+						if (k < rarr.length - 1)
+							el("sproom-" + i + ":" + j).innerHTML += " / ";
+				}
+			}
+		}
+		return true;
+	}
+
+	create_tbl();
+	create_grid();
+	el("btn-mklink").onclick = function(event) {
+		console.log("clicked!");
+		if (mklink()) {
+			loadlink();
+			el("edit").setAttribute("style", "display: none");
+			el("grid").removeAttribute("style");
+		}
+	};
+
+	el("btn-edit").onclick = function(event) {
+		console.log("edit clicked");
+		el("grid").setAttribute("style", "display: none");
+		el("edit").removeAttribute("style");
+		return false;
+	};
+
+	try {
+		loadlink();
+	} catch (e) {
+		console.log("failed to parse link: " + e.message);
+	}
+
+</script>
+	</body>
+</html>
