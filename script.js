@@ -288,10 +288,17 @@ function load_map() {
 
 function hash_changed() {
 	console.log("hash changed: " + window.location.hash);
-	if (get_sala(window.location.hash.substr(1)) !== null) {
-		show_sala(window.location.hash.substr(1));
-		last_hash = window.location.hash.substr(1);
-		return true;
+	var hname = window.location.hash.substr(1);
+	var fname = get_sala_full_name(hname);
+	if (fname !== null) {
+		if (hname !== fname) {
+			window.location.hash = fname;
+			return false;
+		} else {
+			show_sala(fname);
+			last_hash = fname;
+			return true;
+		}
 	} else {
 		window.location.hash = last_hash;
 		return false;
@@ -417,6 +424,25 @@ function get_sala_new_name(old_name) {
 			return aliases[i][0];
 	}
 	return null;
+}
+
+function get_sala_full_name(old_name_or_new_name) {
+	var old_from_new = get_sala_old_name(old_name_or_new_name);
+	var new_from_old = get_sala_new_name(old_name_or_new_name);
+	var fname = "";
+	if (old_from_new !== null) {
+		fname = old_name_or_new_name + ";" + old_from_new;
+	} else if (new_from_old !== null) {
+		fname = new_from_old + ";" + old_name_or_new_name;
+	} else {
+		fname = old_name_or_new_name;
+	}
+	var sala = get_sala(fname.toLowerCase());
+	if (sala === null) {
+		return null;
+	} else {
+		return fname.toLowerCase();
+	}
 }
 
 function search_sala() {
