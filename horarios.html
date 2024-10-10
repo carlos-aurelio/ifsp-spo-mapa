@@ -212,7 +212,7 @@ div.footer {
 				let rarr = diarr[1].split("/");
 				el("sproom-" + i + ":" + j).innerHTML = "";
 				for (let k = 0; k < rarr.length; k++) {
-						let lnk = "<a target=\"_blank\" href=\"" + window.location.protocol + "//" + window.location.host + "/#" + rarr[k] + "\">" + rarr[k].split(";")[0].toUpperCase() + "</a>";
+						let lnk = "<a target=\"_blank\" href=\"" + window.location.protocol + "//" + window.location.host + window.location.pathname.slice(0, window.location.pathname.lastIndexOf('/')) + "/#" + rarr[k] + "\">" + rarr[k].split(";")[0].toUpperCase() + "</a>";
 
 						el("sproom-" + i + ":" + j).innerHTML += lnk;
 						if (k < rarr.length - 1)
