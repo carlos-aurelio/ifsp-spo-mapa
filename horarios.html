@@ -200,6 +200,7 @@ div.footer {
 			console.log("invalid link");
 			return false;
 		}
+		document.title = arr[0];
 		el("ititle").value = arr[0];
 		el("sptitle").innerHTML = arr[0];
 		for (let i = 0; i < 5; i++) {
